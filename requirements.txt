@@ -4,15 +4,39 @@
 #
 #    pip-compile --allow-unsafe
 #
-pydantic==1.8.1           # via repository-orm
-pymysql==1.0.2            # via repository-orm
-pypika==0.48.1            # via repository-orm
-repository-orm==0.2.0     # via pyscrobbler (setup.py)
-ruamel.yaml.clib==0.2.2   # via ruamel.yaml
-ruamel.yaml==0.17.4       # via pyscrobbler (setup.py)
-sqlparse==0.4.1           # via yoyo-migrations
-tabulate==0.8.9           # via yoyo-migrations
-tinydb-serialization==2.1.0  # via repository-orm
-tinydb==4.4.0             # via repository-orm, tinydb-serialization
-typing-extensions==3.7.4.3  # via pydantic
-yoyo-migrations==7.3.1    # via repository-orm
+deepdiff==5.5.0
+    # via repository-orm
+fastapi==0.65.1
+    # via pyscrobbler (setup.py)
+ordered-set==4.0.2
+    # via deepdiff
+pydantic==1.8.2
+    # via
+    #   fastapi
+    #   repository-orm
+pymysql==1.0.2
+    # via repository-orm
+pypika==0.48.2
+    # via repository-orm
+repository-orm==0.5.0
+    # via pyscrobbler (setup.py)
+ruamel.yaml.clib==0.2.2
+    # via ruamel.yaml
+ruamel.yaml==0.17.4
+    # via pyscrobbler (setup.py)
+sqlparse==0.4.1
+    # via yoyo-migrations
+starlette==0.14.2
+    # via fastapi
+tabulate==0.8.9
+    # via yoyo-migrations
+tinydb-serialization==2.1.0
+    # via repository-orm
+tinydb==4.4.0
+    # via
+    #   repository-orm
+    #   tinydb-serialization
+typing-extensions==3.10.0.0
+    # via pydantic
+yoyo-migrations==7.3.1
+    # via repository-orm

@@ -129,6 +129,15 @@ pycodestyle = [
 ]
 pyflakes = ["+*"]
 
+[tool.flakehell.exceptions."src/pyscrobbler/entrypoints/api.py"]
+flake8-mutable = [
+  "-M511", # Mutable default argument. But it's the way to define dependencies.
+]
+flake8-bugbear = [
+  "-B008", # Do not perform function calls in argument defaults.
+           # But it's the way to define dependencies.
+]
+
 [tool.flakehell.exceptions."tests/"]
 flake8-docstrings = [
   "-D400", # First line should end with a period
@@ -140,6 +149,7 @@ flake8-annotations = [
 pylint = [
   "-R0201", # Method could be a function. Raised because the methods of a test class
             # don't use the self object, which is not wrong.
+  "-R0903", # Too few methods warning, but is the way to define factoryboy factories.
 ]
 
 [tool.flakehell.exceptions."tests/factories.py"]
