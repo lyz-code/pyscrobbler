@@ -9,6 +9,10 @@ factory_boy
 faker
 faker-optional
 faker-enum
+pytest-xdist
+
+# Developing
+uvicorn[standard]
 
 # Linting
 yamllint

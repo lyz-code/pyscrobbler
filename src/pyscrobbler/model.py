@@ -29,8 +29,6 @@ class TrackEvent(EventEntity):
     item_id: Optional[Union[int, str]] = None
     artist: Optional[str] = None
     title: Optional[str] = None
-    duration: Optional[int] = None
-    item_duration: Optional[int] = None
 
 
 class TrackScrobState(str, Enum):
@@ -45,6 +43,8 @@ class TrackScrob(TrackEvent):
 
     item_id: Union[int, str]
     state: TrackScrobState = TrackScrobState.FINISHED
+    duration: Optional[int] = None
+    item_duration: Optional[int] = None
 
 
 class TrackRate(TrackEvent):

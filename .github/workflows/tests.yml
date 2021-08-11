@@ -78,3 +78,19 @@ jobs:
           --binary
           --out-dir dist/
           .
+  Docker:
+    name: Build the Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build the docker
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: pyscrobbler:latest
+      - name: Run the application
+        run: docker run -d -p 80:80 pyscrobbler:latest
+      - name: Test that it's working
+        run: curl http://localhost:80/alive

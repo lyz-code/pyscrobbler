@@ -15,6 +15,8 @@ update:
 	@echo "- Updating dependencies -"
 	@echo "-------------------------"
 
+	pip install -U pip
+
 	rm requirements.txt
 	touch requirements.txt
 	pip-compile -Ur --allow-unsafe
@@ -131,7 +133,7 @@ docs: test-examples
 	@echo ""
 
 .PHONY: bump
-bump: pull-master bump-version build-package upload-pypi clean
+bump: pull-master bump-version build-package upload-pypi clean build-docker upload-dockerhub
 
 .PHONY: pull-master
 pull-master:
@@ -144,13 +146,26 @@ pull-master:
 
 	@echo ""
 
+.PHONY: bump-version
+bump-version:
+	@echo "---------------------------"
+	@echo "- Bumping program version -"
+	@echo "---------------------------"
+
+	cz bump --changelog --no-verify
+	git push
+	git push --tags
+
+	@echo ""
+
 .PHONY: build-package
-build-package:
+build-package: clean
 	@echo "------------------------"
 	@echo "- Building the package -"
 	@echo "------------------------"
 
-	python -m pep517.build --source --binary --out-dir dist/ .
+	python setup.py -q bdist_wheel
+	python setup.py -q sdist
 
 	@echo ""
 
@@ -174,15 +189,37 @@ upload-pypi:
 
 	@echo ""
 
-.PHONY: bump-version
-bump-version:
-	@echo "---------------------------"
-	@echo "- Bumping program version -"
-	@echo "---------------------------"
+.PHONY: upload-testing-pypi
+upload-testing-pypi:
+	@echo "-------------------------------------"
+	@echo "- Uploading package to pypi testing -"
+	@echo "-------------------------------------"
 
-	cz bump --changelog --no-verify
-	git push
-	git push --tags
+	twine upload -r testpypi dist/*
+
+	@echo ""
+
+.PHONY: build-docker
+build-docker:
+	@echo "-----------------------"
+	@echo "- Building the docker -"
+	@echo "-----------------------"
+
+	version="$(grep '^version =' pyproject.toml | cut -d '"' -f2)"
+	docker build -t lyzz/pyscrobbler .
+	docker tag lyzz/pyscrobbler:latest "lyz/pyscrobbler:$version"
+
+	@echo ""
+
+.PHONY: upload-dockerhub
+upload-pypi:
+	@echo "---------------------------------"
+	@echo "- Uploading Docker to Dockerhub -"
+	@echo "---------------------------------"
+
+	version="$(grep '^version =' pyproject.toml | cut -d '"' -f2)"
+	docker push lyzz/pyscrobbler:latest
+	docker push "lyzz/pyscrobbler:$version"
 
 	@echo ""
 

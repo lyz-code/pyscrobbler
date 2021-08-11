@@ -3,7 +3,7 @@ Date: 2021-04-14
 # Status
 <!-- What is the status? Draft, Proposed, Accepted, Rejected, Deprecated or Superseded?
 -->
-Draft
+Accepted
 
 # Context
 <!-- What is the issue that we're seeing that is motivating this decision or change? -->
@@ -41,20 +41,21 @@ guidelines](https://fastapi.tiangolo.com/tutorial/testing/).
 
 ## Flexible to add new types
 
-Media type interface definition.
+Keeping in mind that more media types will be added, I'm going to create first
+the structure for music scrobbling and once new media types are added, we will
+refactor the code.
 
 ## Authentication
 
-We'll use [FastAPI authentication
+In the first iterations we won't have authentication. Once more than one user or
+a better security schema are needed, we'll use [FastAPI authentication
 system](https://fastapi.tiangolo.com/tutorial/security/first-steps/).
-
-## Integrations
 
 ## Configuration
 
-We'll use a yaml file to configure:
-
-* The `repository-orm` database url.
+We'll use [pydantics setting
+system](https://pydantic-docs.helpmanual.io/usage/settings/), so the
+configuration will be given by environmental variables or dotenv files.
 
 ## Deployment
 
@@ -71,6 +72,7 @@ a change in the future won't be dramatic (in theory).
 
 # Decision
 <!-- What is the change that we're proposing and/or doing? -->
+Implement the only proposal.
 
 # Consequences
 <!-- What becomes easier or more difficult to do because of this change? -->

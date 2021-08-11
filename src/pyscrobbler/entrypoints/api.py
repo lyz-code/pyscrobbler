@@ -1,15 +1,24 @@
 """Define the pyscrobbler API."""
 
+import logging
 from functools import lru_cache
 from typing import List, Union
 
 from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi.logger import logger
 from repository_orm import EntityNotFoundError, Repository, load_repository
 
 from .. import services
 from ..config import Settings
 from ..exceptions import RatingError, TaggingError, UndoError
 from ..model import EventType, TrackEvent, TrackRate, TrackScrob, TrackTag
+
+log = logging.getLogger("gunicorn.error")
+logger.handlers = log.handlers
+if __name__ != "main":
+    logger.setLevel(log.level)
+else:
+    logger.setLevel(logging.DEBUG)
 
 app = FastAPI()
 
@@ -20,6 +29,7 @@ app = FastAPI()
 def get_settings() -> Settings:
     """Configure the program settings."""
     # no cover: the dependency are injected in the tests
+    log.info("Loading the settings")
     return Settings()  # pragma: no cover
 
 
@@ -29,6 +39,7 @@ def get_repo(settings: Settings = Depends(get_settings)) -> Repository:
     Returns:
         Configured Repository instance.
     """
+    log.info("Loading the repository")
     repo = load_repository([TrackRate, TrackScrob, TrackTag], settings.database_url)
 
     return repo
@@ -54,6 +65,7 @@ def scrob(item: TrackScrob, repo: Repository = Depends(get_repo)) -> None:
         item: Track scrob information.
         repo: Repository to store the data.
     """
+    log.info(f"Scrobbing track {str(item)}")
     services.scrob_track(repo, item)
 
 
@@ -68,6 +80,7 @@ def rate(item: TrackRate, repo: Repository = Depends(get_repo)) -> None:
     Raises:
         HTTPException: if there is a RatingError
     """
+    log.info(f"rating track with value {str(item)}")
     try:
         services.rate_track(repo, item)
     except RatingError as error:
@@ -85,6 +98,7 @@ def tag(item: TrackTag, repo: Repository = Depends(get_repo)) -> None:
     Raises:
         HTTPException: if there is a TaggingError
     """
+    log.info(f"tagging track with tag {str(item)}")
     try:
         services.tag_track(repo, item)
     except TaggingError as error:
@@ -98,6 +112,7 @@ def undo(repo: Repository = Depends(get_repo)) -> str:
     Args:
         repo: Repository to store the data.
     """
+    log.info("Undoing the last rate or tag")
     try:
         item = services.undo(repo)
         if isinstance(item, TrackRate):
@@ -126,6 +141,7 @@ def history(
             `["scrob", "rate", "tag", "all"]`. Default: `"all"`.
         item_id: Return only events of this item_id.
     """
+    log.info("Printing the history")
     try:
         return services.history(repo=repo, limit=limit, type_=type_, item_id=item_id)
     except EntityNotFoundError as error:

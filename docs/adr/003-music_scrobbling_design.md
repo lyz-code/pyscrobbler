@@ -3,7 +3,7 @@ Date: 2021-04-14
 # Status
 <!-- What is the status? Draft, Proposed, Accepted, Rejected, Deprecated or Superseded?
 -->
-Draft
+Accepted
 
 # Context
 <!-- What is the issue that we're seeing that is motivating this decision or change? -->
@@ -23,7 +23,7 @@ We want the next features:
 * A way for the user to undo the last rating.
 * The history of a track must be associated with an immutable id, so that we
     don't loose information if the file name or metadata of the track changes.
-* An endpoint that given the track id, we get the history of that item.
+* An endpoint that returns the history of an item by their track id.
 * I'm not sure if I want to support asynchronous data. Imagine that the media
     player looses connectivity with the scrobbler, when it reconnects again, it
     may be able to upload all the created data.
@@ -227,7 +227,7 @@ versions.
 We'll:
 
 * Develop an FastAPI backend with the methods: `scrob`, `rate`, `start`,
-    `undo`, and `item` that will use an unique `id` as the identifier of the
+    `undo`, and `history` that will use an unique `id` as the identifier of the
     track.
 * Discern a full reproduction from a skip by comparing the `item_duration` with
     the reproduction `duration`.

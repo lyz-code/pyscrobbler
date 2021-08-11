@@ -1,17 +1,10 @@
 """Python package building configuration."""
 
-import logging
-import os
 import re
-import shutil
 from glob import glob
 from os.path import basename, splitext
 
 from setuptools import find_packages, setup
-from setuptools.command.egg_info import egg_info
-from setuptools.command.install import install
-
-log = logging.getLogger(__name__)
 
 # Avoid loading the package to extract the version
 with open("src/pyscrobbler/version.py") as fp:
@@ -19,39 +12,6 @@ with open("src/pyscrobbler/version.py") as fp:
     if version_match is None:
         raise ValueError("The version is not specified in the version.py file.")
     version = version_match["version"]
-
-
-class PostInstallCommand(install):  # type: ignore
-    """Post-installation for installation mode."""
-
-    def run(self) -> None:
-        """Create required directories and files."""
-        install.run(self)
-
-        try:
-            data_directory = os.path.expanduser("~/.local/share/pyscrobbler")
-            os.makedirs(data_directory)
-            log.info("Data directory created")
-        except FileExistsError:
-            log.info("Data directory already exits")
-
-        config_path = os.path.join(data_directory, "config.yaml")
-        if os.path.isfile(config_path) and os.access(config_path, os.R_OK):
-            log.info(
-                "Configuration file already exists, check the documentation "
-                "for the new version changes."
-            )
-        else:
-            shutil.copyfile("assets/config.yaml", config_path)
-            log.info("Copied default configuration template")
-
-
-class PostEggInfoCommand(egg_info):  # type: ignore
-    """Post-installation for egg_info mode."""
-
-    def run(self) -> None:
-        """Create required directories and files."""
-        egg_info.run(self)
 
 
 with open("README.md", "r") as readme_file:
@@ -86,7 +46,6 @@ setup(
         "Topic :: Utilities",
         "Natural Language :: English",
     ],
-    cmdclass={"install": PostInstallCommand, "egg_info": PostEggInfoCommand},
     install_requires=[
         "fastapi",
         "repository-orm",

@@ -15,9 +15,9 @@ graph TD
     click 002 "https://lyz-code.github.io/pyscrobbler/adr/002-initial_plugin_design" _blank
     click 003 "https://lyz-code.github.io/pyscrobbler/adr/003-music_scrobbling_design.md" _blank
 
-    001:::draft
-    002:::draft
-    003:::draft
+    001:::accepted
+    002:::accepted
+    003:::accepted
 
     classDef draft fill:#CDBFEA;
     classDef proposed fill:#B1CCE8;

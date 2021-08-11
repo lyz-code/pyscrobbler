@@ -3,7 +3,7 @@ site_name: PyScrobbler
 site_author: Lyz
 site_url: https://lyz-code.github.io/pyscrobbler
 nav:
-  - Overview: index.md
+  - PyScrobbler: index.md
   - Reference: reference.md
   - Contributing: contributing.md
   - Architecture Decision Records:
